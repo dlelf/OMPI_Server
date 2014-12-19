@@ -11,7 +11,7 @@
     </parent>
     
      <properties>
-        <start-class>hello.Application</start-class>
+        <start-class>model.Application</start-class>
         <!-- use UTF-8 for everything -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>        
@@ -33,6 +33,12 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-rest</artifactId>
 		</dependency>
+		      <dependency>
+            <groupId>com.ganyo</groupId>
+            <artifactId>gcm-server</artifactId>
+            <version>1.0.2</version>
+            <type>jar</type>
+        </dependency>
     
     <dependency>
 			<groupId>org.postgresql</groupId>
@@ -62,19 +68,34 @@
 			<artifactId>esper</artifactId>
 			<version>${esper.version}</version>
 		</dependency>
-		
-		
-	</dependencies>
+
+
+
+		<dependency>
+			<groupId>org.neo4j</groupId>
+			<artifactId>neo4j-cypher-compiler-2.1</artifactId>
+			<version>2.1.2</version>
+		</dependency>
+  </dependencies>
   
   
     
     <build>
-        <plugins>
+           <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                  <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
-        </plugins>
+        </plugins>  
+       
+    
     </build>
 
     <repositories>

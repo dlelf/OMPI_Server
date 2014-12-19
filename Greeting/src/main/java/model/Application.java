@@ -1,22 +1,21 @@
 package model;
 
-import java.io.File;
-import java.io.IOException;
+
+import hello.POST2GCM;
+import model.Person;
+
 import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
+import org.apache.commons.logging.Log;
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +35,8 @@ import org.springframework.data.rest.webmvc.config.RepositoryRestMvcConfiguratio
 @Import(RepositoryRestMvcConfiguration.class)
 @EnableAutoConfiguration
 public class Application implements CommandLineRunner 	{
+	static ConfigurableApplicationContext context;
+	
 @Bean
 public DataSource dataSource()
 {
@@ -55,7 +56,7 @@ public DataSource dataSource()
 			cfgMap.put(str.split("=")[0].trim(), str.split("=")[1].trim());
 		}
 		
-	}
+	} 
 	
 	dbProperties.setUrl("jdbc:postgresql://" + cfgMap.get("Server") + ":" + cfgMap.get("Port") + "/" + cfgMap.get("DB") );
 	dbProperties.setDriverClassName("org.postgresql.Driver");
@@ -114,7 +115,23 @@ public PlatformTransactionManager transactionManager() {
 
 public static void main(String[] args) {
 
-	SpringApplication.run(Application.class, args);
+	context = SpringApplication.run(Application.class);	
+	//broadcastGroupNr();
+}
+
+public static void broadcastGroupNr(){
+	System.out.println( "Sending POST to GCM" );
+	POST2GCM post2gcm = new POST2GCM();
+	String apiKey = "AIzaSyBWm2UWRRh3RAff6srwPoJGmLH6PZ3KYFo";
+	PersonRepository pp = context.getBean(PersonRepository.class);	
+	List<Person> allPersons = (List<Person>) pp.findAll();
+	for (Person person:allPersons){
+		if (person.getGoogleCloudId() != null)
+		System.out.println( "Sending GroupNr to Person"+person.getId() );
+		post2gcm.sendMessage(person.getGoogleCloudId(), apiKey,person.getGroupNr().toString());	
+		
+	}
+	
 	
 }
 
@@ -126,25 +143,25 @@ public void run(String... args) throws Exception {
 private String loadConfig() {
 	
 	try {
-		//String strConfig = new String(Files.readAllBytes(Paths.get(new File("model\\Model\\Config\\DBConfig.cfg").getAbsolutePath())), StandardCharsets.UTF_8);
-		InputStream is = this.getClass().getResourceAsStream("/resources/DBConfig.cfg");
-		
+		//InputStream is = this.getClass().getResourceAsStream("DBConfig.cfg");
+		//InputStream is = this.getClass().getResourceAsStream("classpath:DBConfig.cfg");
+		InputStream is = this.getClass().getResourceAsStream("/DBConfig.cfg");
+		//InputStream is = this.getClass().getResourceAsStream("DBConfig.cfg");
+		if(is != null){
+			System.out.println("Config loaded !!!");
+		}
 		Scanner scan = new Scanner(is).useDelimiter("\\A");
-		String strConfig = scan.hasNext() ? scan.next() : "";
+		String strConfig = scan.hasNext() ? scan.next() : "";		
 		
-		
-		//String strConfig = new String(Files.readAllBytes(Paths.get(new File("Config\\DBConfig.cfg").getAbsolutePath())), StandardCharsets.UTF_8);
 		System.out.println("DB Config successfully loaded");
 		return strConfig;
 		
 	} catch ( Exception ex) {
 		System.err.println("Error reading Database Config: " + ex);
+		ex.printStackTrace();
 	}
 	
 	return null;
-	
-	
+}
 }
 
-
-}
