@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="Greeting">
+    <wb-module deploy-name="OMPIServer">
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
-        <property name="context-root" value="Greeting"/>
-        <property name="java-output-path" value="/Greeting/target/classes"/>
+        <property name="java-output-path" value="/OMPIServer/target/classes"/>
+        <property name="context-root" value="OMPIServer"/>
     </wb-module>
 </project-modules>
