@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.data.rest.core.annotation.RestResource;
+
 @Entity
 public class Person {
 
@@ -30,7 +32,7 @@ public class Person {
 	 private int step;
 	
 	
-	
+	@RestResource(exported = false)
 	@OneToMany(mappedBy="person")	
 	private List<Cycle>  cycles;
 	

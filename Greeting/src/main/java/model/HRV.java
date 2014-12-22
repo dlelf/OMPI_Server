@@ -22,7 +22,7 @@ public class HRV {
 	@ManyToOne
 	private Cycle cycle;
 	
-	private double rrInterval;
+	private long rrInterval;
 	
 	private boolean beforeReading;
 
@@ -50,11 +50,11 @@ public class HRV {
 		this.cycle = cycle;
 	}
 
-	public double getRrInterval() {
+	public long getRrInterval() {
 		return rrInterval;
 	}
 
-	public void setRrInterval(double rrInterval) {
+	public void setRrInterval(long rrInterval) {
 		this.rrInterval = rrInterval;
 	}
 
